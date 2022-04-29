@@ -1,9 +1,11 @@
 import { useState } from 'react'
 
-const AnecdoteDisplay = ({ anecdotes, index }) => {
+const AnecdoteDisplay = ({ anecdotes, index, votes }) => {
+  console.log("I Updated!");
   return (
     <div>
       <p>{anecdotes[index]}</p>
+      <p>Votes {votes[index]}</p>
     </div>
   )
 }
@@ -19,16 +21,27 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients'
   ]
 
-  const [selected, setSelected] = useState(0)
+  const votesInit = Array(anecdotes.length).fill(0);
+
+  const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(votesInit);
+
 
   function getRandomInt(max) {
     return Math.floor(Math.random() * max);
   }
 
+  const handleVote = () => {
+    const votesCopy = [ ...votes ];
+    votesCopy[selected]++;
+    setVotes(votesCopy);
+  }
+
   return (
     <div>
-      <AnecdoteDisplay anecdotes={anecdotes} index={selected}/>
+      <AnecdoteDisplay anecdotes={anecdotes} index={selected} votes={votes}/>
       <button onClick={() => setSelected(getRandomInt(anecdotes.length))}>Random anecdote</button>
+      <button onClick={handleVote}>Vote</button>
     </div>
   )
 }
