@@ -1,11 +1,23 @@
 import { useState } from 'react'
 
-const AnecdoteDisplay = ({ anecdotes, index, votes }) => {
+const AnecdoteOfTheDay = ({ anecdotes, index, votes }) => {
   console.log("I Updated!");
   return (
     <div>
+      <h1>Anecdote of the Day</h1>
       <p>{anecdotes[index]}</p>
       <p>Votes {votes[index]}</p>
+    </div>
+  )
+}
+
+const AnecdoteMostVotes = ({ anecdotes, votes }) => {
+  const maxIndex = votes.indexOf(Math.max(...votes));
+  return (
+    <div>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[maxIndex]}</p>
+      <p>Votes {votes[maxIndex]}</p>
     </div>
   )
 }
@@ -39,9 +51,11 @@ const App = () => {
 
   return (
     <div>
-      <AnecdoteDisplay anecdotes={anecdotes} index={selected} votes={votes}/>
+      <AnecdoteOfTheDay anecdotes={anecdotes} index={selected} votes={votes}/>
       <button onClick={() => setSelected(getRandomInt(anecdotes.length))}>Random anecdote</button>
       <button onClick={handleVote}>Vote</button>
+      <AnecdoteMostVotes anecdotes={anecdotes} votes={votes}/>
+
     </div>
   )
 }
