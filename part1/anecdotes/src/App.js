@@ -38,7 +38,6 @@ const App = () => {
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(votesInit);
 
-
   function getRandomInt(max) {
     return Math.floor(Math.random() * max);
   }
