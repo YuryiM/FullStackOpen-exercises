@@ -1,8 +1,17 @@
 import { useState } from 'react'
 
-// const Numbers = () => {
-  
-// }
+const Persons = ({ persons, search }) => {
+  let lowerCase = search.toLowerCase()
+  return (
+    <ul>
+      { persons.map((person, i) => {
+        if ((person.name.includes(lowerCase) || person.number.includes(lowerCase))){
+          return <Person key={i} name={person.name} number={person.number} /> 
+        }
+      })}
+    </ul>
+  )
+}
 
 const Person = ({ name, number }) => {
   return (
@@ -12,15 +21,41 @@ const Person = ({ name, number }) => {
   )
 }
 
+const Filter = (props) => {
+  return (
+    <div>
+      filter shown with <input value={props.searchString} onChange={props.handleSearchChange}/>
+    </div>
+  )
+}
+
+const Form = (props) => {
+  return (
+    <div>
+      <form onSubmit={props.onSubmit}>
+        <div>
+          name: <input value={props.nameValue} onChange={props.handleNameChange}/>
+        </div>
+        <div>
+          number: <input value={props.newNumber} onChange={props.handleNumberChange}/>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
     {
       name: 'Arto Hellas',
-      number: '702-601-6959'
+      number: '568-621-6959'
     },
     {
-      name: 'Yuryi Mironchyk',
-      number: '702-601-6938'
+      name: 'Larry Finklestein',
+      number: '329-626-6938'
     }
   ]) 
   const [newName, setNewName] = useState('');
@@ -56,30 +91,24 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filter shown with <input value={searchString} onChange={handleSearchChange}/></div>
+      <Filter 
+        searchString = {searchString}
+        handleSearchChange = {handleSearchChange}
+      />
+      
       <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Form
+        onSubmit = {addPerson}
+        nameValue = {newName}
+        handleNameChange = {handleNameChange}
+        newNumber = {newNumber}
+        handleNumberChange = {handleNumberChange}
+      />
       <h2>Numbers</h2>
-      <ul>
-        { persons.map((person, i) => {
-          console.log(person.name);
-          console.log(person.number)
-          console.log(searchString);
-          if ((person.name.includes(searchString) || person.number.includes(searchString))){
-            return <Person key={i} name={person.name} number={person.number} /> 
-          }
-        })}
-      </ul>
+      <Persons 
+        persons={persons} 
+        search={searchString}
+      />
     </div>
   )
 }
