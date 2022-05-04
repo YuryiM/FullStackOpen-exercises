@@ -1,16 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const Persons = ({ persons, search }) => {
-  let lowerCase = search.toLowerCase()
+  const lowerCase = search.toLowerCase()
   return (
     <ul>
-      { persons.map((person, i) => {
+      { persons.map(person => {  
         if ((person.name.includes(lowerCase) || person.number.includes(lowerCase))){
-          return <Person key={i} name={person.name} number={person.number} /> 
+          return <Person key={person.id} name={person.name} number={person.number} />
         }
       })}
     </ul>
-  )
+  )  
 }
 
 const Person = ({ name, number }) => {
@@ -49,15 +50,21 @@ const Form = (props) => {
 
 const App = () => {
   const [persons, setPersons] = useState([
-    {
-      name: 'Arto Hellas',
-      number: '568-621-6959'
+    { 
+      "name": "Richard Butt", 
+      "number": "040-123456",
+      "id": 0
     },
-    {
-      name: 'Larry Finklestein',
-      number: '329-626-6938'
-    }
   ]) 
+
+  useEffect(() => {
+    const promise = axios.get('http://localhost:3001/persons')
+    promise.then(response => {
+      const serverResponse = response.data
+      setPersons(persons.concat(serverResponse))
+    })
+  }, [])
+
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchString, setSearchString] = useState('');
@@ -79,8 +86,8 @@ const App = () => {
     if(persons.find(person => person.name === newName)) alert(`${newName} is already added to phonebook`);
     else {
       const person = {
-        name: newName,
-        number: newNumber
+        'name': newName,
+        'number': newNumber
       }
       setPersons(persons.concat(person));
       setNewName('');
