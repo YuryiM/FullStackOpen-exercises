@@ -1,6 +1,7 @@
 import React from 'react'
 
 const CountryInfo = ({ country }) => {
+    console.log("!!!!!!!!!!")
     const languages = Object.values(country.languages)
     return(
         <div>

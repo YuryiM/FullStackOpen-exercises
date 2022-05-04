@@ -2,7 +2,7 @@ import React from 'react';
 import { CountryInfo } from './CountryInfo'
 import { CountriesList } from './CountriesList'
 
-const SearchResults = ({ filter, allCountries }) => {
+const SearchResults = ({ filter, allCountries, handleClick, country }) => {
     if(filter){
         const countries = allCountries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase()))
         if(countries.length > 10) {
@@ -11,7 +11,7 @@ const SearchResults = ({ filter, allCountries }) => {
             )
         }
         else if(countries.length >= 2){ 
-            return(<CountriesList countries={countries} />) 
+            return(<CountriesList countries={countries} handleClick={handleClick}/>) 
         }
         else if(countries.length == 1){ 
             return(<CountryInfo country={countries[0]}/>) 

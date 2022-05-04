@@ -18,7 +18,6 @@ const Search = ({ value, onChange}) => {
 
 function App() {
   const [allCountries, setAllCountries] = useState([])
-  const [displayCountries, setDisplayCountries] = useState([])
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
@@ -29,14 +28,12 @@ function App() {
     })
   }, [])
 
-  const updateCountries = () => {
-    const filteredCountries = allCountries.filter(country => country.name.common.includes(filter))
-    setDisplayCountries(filteredCountries)
-    console.log(filter)
-  }
-
   const filterChange = event => {
     setFilter(event.target.value)
+  }
+
+  const handleClick = event => {
+    setFilter(event.target.id)
   }
 
   return (
@@ -48,6 +45,7 @@ function App() {
       <SearchResults 
         allCountries={allCountries}
         filter={filter}
+        handleClick={handleClick}
       />
     </div>
   );
