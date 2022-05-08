@@ -3,7 +3,7 @@ const app = express()
 
 app.use(express.json())
 
-let notes = [
+let people = [
     { 
       "id": 1,
       "name": "Arto Hellas", 
@@ -28,52 +28,63 @@ let notes = [
 
 app.get('/info', (request, response) => {
     const htmlResponse = `
-    <div>Phonebook has info for ${notes.length} people</div>
+    <div>Phonebook has info for ${people.length} people</div>
     <div>${new Date()}</div>
     `
     response.send(htmlResponse)
 })
   
 app.get('/api/persons', (request, response) => {
-    response.json(notes)
+    response.json(people)
 })
 
-app.post('/api/notes', (request, response) => {
+const generateId = () => {
+    const maxId = people.length > 0
+      ? Math.max(...people.map(n => n.id))
+      : 0
+    return maxId + 1
+  }
+
+app.post('/api/persons', (request, response) => {
     const body = request.body
   
-    if (!body.content) {
+    if (!body.name || !body.number) {
       return response.status(400).json({ 
         error: 'content missing' 
       })
     }
-  
-    const note = {
-      content: body.content,
-      important: body.important || false,
-      date: new Date(),
-      id: generateId(),
+    else if (people.find(person => person.name === body.name)) {
+        return response.status(400).json({
+            error: 'person already exists'
+        })
     }
   
-    notes = notes.concat(note)
+    const person = {
+      id: generateId(),
+      name: body.name,
+      number: body.number,
+    }
   
-    response.json(note)
+    people = people.concat(person)
+  
+    response.json(person)
 })
 
-app.get('/api/notes/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    const note = notes.find(note => note.id ===id)
-    if (note) {
-        response.json(note)
+    const person = people.find(person => person.id === id)
+    if (person) {
+        response.json(person)
     }
     else {
         response.status(404).end()
     }
 })
 
-app.delete('/api/notes/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    notes = notes.filter(note => note.id !== id)
-  
+    people = people.filter(person => person.id !== id)
+    console.log(people)
     response.status(204).end()
 })
 
